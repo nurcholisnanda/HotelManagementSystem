@@ -1,0 +1,169 @@
+definitions:
+  models.ErrResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  models.HotelAvailableRoomsResponse:
+    properties:
+      available_rooms:
+        items:
+          $ref: '#/definitions/models.Room'
+        type: array
+      checkin_date:
+        type: string
+      checkout_date:
+        type: string
+      room_qty:
+        type: integer
+      room_type_id:
+        type: integer
+      total_price:
+        type: integer
+    type: object
+  models.Price:
+    properties:
+      date:
+        type: string
+      price:
+        type: integer
+    type: object
+  models.PromoRoomsRequest:
+    properties:
+      available_rooms:
+        items:
+          $ref: '#/definitions/models.Room'
+        type: array
+      checkin_date:
+        type: string
+      checkout_date:
+        type: string
+      promo_id:
+        type: integer
+      room_qty:
+        type: integer
+      room_type_id:
+        type: integer
+      total_price:
+        type: integer
+    type: object
+  models.PromoRoomsResponse:
+    properties:
+      available_rooms:
+        items:
+          $ref: '#/definitions/models.Room'
+        type: array
+      checkin_date:
+        type: string
+      checkout_date:
+        type: string
+      promo_id:
+        type: integer
+      promo_price:
+        type: integer
+      room_qty:
+        type: integer
+      room_type_id:
+        type: integer
+      total_price:
+        type: integer
+    type: object
+  models.Room:
+    properties:
+      price:
+        items:
+          $ref: '#/definitions/models.Price'
+        type: array
+      room_id:
+        type: integer
+      room_number:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /available-rooms:
+    get:
+      consumes:
+      - application/json
+      description: Get available rooms
+      operationId: get-available-rooms
+      parameters:
+      - description: Checkin date
+        example: '"2022-12-31"'
+        in: query
+        name: checkin_date
+        required: true
+        type: string
+      - description: Checkout date
+        example: '"2022-12-31"'
+        in: query
+        name: checkout_date
+        required: true
+        type: string
+      - default: 1
+        description: Room Qty
+        in: query
+        name: room_qty
+        required: true
+        type: integer
+      - default: 1
+        description: Room Type ID
+        in: query
+        name: room_type_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HotelAvailableRoomsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+      summary: Get available rooms
+      tags:
+      - Hotel Management
+  /promo-rooms:
+    post:
+      consumes:
+      - application/json
+      description: Get rooms with promo prices
+      operationId: get-promo-rooms
+      parameters:
+      - description: Models of PromoRoomsRequest type
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.PromoRoomsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PromoRoomsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrResponse'
+      summary: Get rooms with promo prices
+      tags:
+      - Hotel Management
+swagger: "2.0"
